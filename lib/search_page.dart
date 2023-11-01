@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:herkunft/CompanyDetails.dart';
-import 'package:herkunft/DBHelper.dart';
+import 'package:herkunft/company_details.dart';
+import 'package:herkunft/db_helper.dart';
 
 class SearchPage extends StatefulWidget {
+  const SearchPage({super.key});
+
   @override
   State<StatefulWidget> createState() {
     return _SearchPageState();
@@ -10,7 +12,7 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  final TextEditingController _filter = new TextEditingController();
+  final TextEditingController _filter = TextEditingController();
 
   String _searchText = "";
 
@@ -19,9 +21,9 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        drawer: _getDrawer(context),
+        // drawer: _getDrawer(context),
         appBar: AppBar(
-          title: Text('Herkunftssuche'),
+          title: const Text('Herkunftssuche'),
           centerTitle: true,
         ),
         body: Scaffold(
@@ -54,14 +56,13 @@ class _SearchPageState extends State<SearchPage> {
         // Important: Remove any padding from the ListView.
         padding: EdgeInsets.zero,
         children: <Widget>[
-          DrawerHeader(
-            child: Text('Drawer Header'),
-            decoration: BoxDecoration(
-              color: Colors.blue,
-            ),
-          ),
+          const DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: Text('Drawer Header')),
           ListTile(
-            title: Text('Item 1'),
+            title: const Text('Item 1'),
             onTap: () {
               // Update the state of the app
               // ...
@@ -70,7 +71,7 @@ class _SearchPageState extends State<SearchPage> {
             },
           ),
           ListTile(
-            title: Text('Item 2'),
+            title: const Text('Item 2'),
             onTap: () {
               // Update the state of the app
               // ...
@@ -89,7 +90,7 @@ class _SearchPageState extends State<SearchPage> {
     return BottomAppBar(
         // notchMargin: 10,
         child: Container(
-            margin: EdgeInsets.all(10.0),
+            margin: const EdgeInsets.all(10.0),
             child: Row(
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -104,10 +105,10 @@ class _SearchPageState extends State<SearchPage> {
         child: TextField(
             controller: _filter,
             decoration: InputDecoration(
-                prefixIcon: Icon(Icons.search),
+                prefixIcon: const Icon(Icons.search),
                 hintText: 'Search...',
                 suffixIcon: IconButton(
-                    icon: Icon(Icons.close),
+                    icon: const Icon(Icons.close),
                     onPressed: () {
                       setState(() {
                         _searchText = "";
@@ -119,7 +120,7 @@ class _SearchPageState extends State<SearchPage> {
   Widget _buildDropdown() {
     return DropdownButton<String>(
       value: _selectedCountry,
-      icon: Icon(Icons.arrow_downward),
+      icon: const Icon(Icons.arrow_downward),
       iconSize: 24,
       elevation: 16,
       underline: Container(
@@ -127,7 +128,7 @@ class _SearchPageState extends State<SearchPage> {
       ),
       onChanged: (newValue) {
         setState(() {
-          _selectedCountry = newValue;
+          if (newValue != null) _selectedCountry = newValue;
         });
       },
       // items: <String>['DE', 'AT', 'IT', 'FR']
@@ -144,37 +145,37 @@ class _SearchPageState extends State<SearchPage> {
   Widget _buildResult() {
     if (_searchText == '') {
       return ListView(padding: const EdgeInsets.all(10.0), children: [
-        Center(
+        const Center(
             child: Text(
           "Herstellersuche über die Zulassungsnummer",
           textScaleFactor: 2,
           textAlign: TextAlign.center,
         )),
         Container(
-            padding: new EdgeInsets.fromLTRB(100, 20, 100, 0),
+            padding: const EdgeInsets.fromLTRB(100, 20, 100, 0),
             child: Image.asset(
               'assets/image.png',
               // width: 300,
             )),
       ]);
-    } else
+    } else {
       return Scaffold(
           body: FutureBuilder<List>(
         future: DBHelper.instance
             .getCompanyDetailList(_selectedCountry, _searchText),
         initialData: List.empty(),
         builder: (context, snapshot) {
-          if (snapshot.hasData && snapshot.data.length > 0) {
-            return new ListView.builder(
+          if (snapshot.hasData && snapshot.data != null) {
+            return ListView.builder(
               padding: const EdgeInsets.all(10.0),
-              itemCount: snapshot.data.length,
+              itemCount: snapshot.data?.length,
               itemBuilder: (context, i) {
-                return CompanyDetailsWidget(snapshot.data[i]);
+                return CompanyDetailsWidget(snapshot.data?[i]);
               },
             );
           } else {
             return Container(
-                margin: EdgeInsets.all(1),
+                margin: const EdgeInsets.all(1),
                 child: Card(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0),
@@ -183,13 +184,13 @@ class _SearchPageState extends State<SearchPage> {
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           ListTile(
-                            title: Text(
+                            title: const Text(
                               'Keine Einträge',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            leading: Icon(
+                            leading: const Icon(
                               Icons.error,
                               color: Colors.orange,
                               size: 40,
@@ -204,5 +205,6 @@ class _SearchPageState extends State<SearchPage> {
           }
         },
       ));
+    }
   }
 }

@@ -32,7 +32,7 @@ class CompanyDetails {
 class CompanyDetailsWidget extends StatelessWidget {
   final CompanyDetails companyDetails;
 
-  CompanyDetailsWidget(this.companyDetails);
+  const CompanyDetailsWidget(this.companyDetails, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -40,15 +40,15 @@ class CompanyDetailsWidget extends StatelessWidget {
         margin: const EdgeInsets.all(4.0),
         child: Card(
             elevation: 10,
-            margin: EdgeInsets.all(2),
+            margin: const EdgeInsets.all(2),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10.0),
             ),
             child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
               ListTile(
                 title: Text(
-                  companyDetails.name ?? '',
-                  style: TextStyle(
+                  companyDetails.name,
+                  style: const TextStyle(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -60,64 +60,62 @@ class CompanyDetailsWidget extends StatelessWidget {
                 subtitle: Text(companyDetails.address),
                 // onTap: () {},
                 contentPadding:
-                    EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                    const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
               ),
               Container(
                   margin: const EdgeInsets.symmetric(horizontal: 20),
                   child: Table(
-                      columnWidths: {
+                      columnWidths: const {
                         0: FractionColumnWidth(.4),
                         1: FractionColumnWidth(.6)
                       },
-                      border: TableBorder(
+                      border: const TableBorder(
                           horizontalInside:
-                              BorderSide(width: 1, color: Colors.grey[200])),
+                              BorderSide(width: 1, color: Colors.white60)),
                       children: [
                         TableRow(children: [
                           TableCell(
                               child: Container(
-                                  padding: EdgeInsets.only(bottom: 10, top: 10),
-                                  child: Text('Zul.-Nr.:',
+                                  padding: const EdgeInsets.only(
+                                      bottom: 10, top: 10),
+                                  child: const Text('Zul.-Nr.:',
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold)))),
                           TableCell(
                               child: Container(
-                                  padding: EdgeInsets.only(bottom: 10, top: 10),
-                                  child: Text(companyDetails.approvalNo ??
-                                      'kein Eintrag')))
+                                  padding: const EdgeInsets.only(
+                                      bottom: 10, top: 10),
+                                  child: Text(companyDetails.approvalNo)))
                         ]),
-                        if (companyDetails.approvalNoOld != null &&
-                            companyDetails.approvalNoOld != '')
+                        if (companyDetails.approvalNoOld != '')
                           TableRow(children: [
                             TableCell(
                                 child: Container(
-                                    padding:
-                                        EdgeInsets.only(bottom: 10, top: 10),
-                                    child: Text('Zul.-Nr. Alt:',
+                                    padding: const EdgeInsets.only(
+                                        bottom: 10, top: 10),
+                                    child: const Text('Zul.-Nr. Alt:',
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold)))),
                             TableCell(
                                 child: Container(
-                                    padding:
-                                        EdgeInsets.only(bottom: 10, top: 10),
-                                    child: Text(
-                                        companyDetails.approvalNoOld ?? '')))
+                                    padding: const EdgeInsets.only(
+                                        bottom: 10, top: 10),
+                                    child: Text(companyDetails.approvalNoOld)))
                           ]),
-                        if (companyDetails.comment != null &&
-                            companyDetails.comment != '')
+                        if (companyDetails.comment != '')
                           TableRow(children: [
                             TableCell(
                                 child: Container(
-                                    padding:
-                                        EdgeInsets.only(bottom: 10, top: 10),
-                                    child: Text('Bemerkung:',
+                                    padding: const EdgeInsets.only(
+                                        bottom: 10, top: 10),
+                                    child: const Text('Bemerkung:',
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold)))),
                             TableCell(
                                 child: Container(
-                                    padding:
-                                        EdgeInsets.only(bottom: 10, top: 10),
-                                    child: Text(companyDetails.comment ?? '')))
+                                    padding: const EdgeInsets.only(
+                                        bottom: 10, top: 10),
+                                    child: Text(companyDetails.comment)))
                           ])
                       ])),
               ButtonBar(
@@ -141,7 +139,7 @@ class CompanyDetailsWidget extends StatelessWidget {
                         style: TextStyle(color: Colors.blue)),
                     onPressed: () {
                       Uri uri = Uri.https('www.google.com', '/search', {
-                        'q': companyDetails.name + "+" + companyDetails.address
+                        'q': "${companyDetails.name}+${companyDetails.address}"
                       });
                       _openURL(uri.toString());
                     },
@@ -154,7 +152,7 @@ class CompanyDetailsWidget extends StatelessWidget {
   /// Open the url in the default browser
   void _openURL(String url) async {
     // if (await canLaunch(url)) {
-    await launch(url);
+    await launchUrl(Uri.parse(url));
     // } else {
     //   throw 'Could not launch $url';
     // }
@@ -167,7 +165,7 @@ void _showDialog(String title, String message, BuildContext context) {
     barrierDismissible: false, // user must tap button!
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Text('Hinweis'),
+        title: const Text('Hinweis'),
         content: SingleChildScrollView(
           child: ListBody(
             children: <Widget>[
@@ -177,7 +175,7 @@ void _showDialog(String title, String message, BuildContext context) {
         ),
         actions: <Widget>[
           TextButton(
-            child: Text('OK'),
+            child: const Text('OK'),
             onPressed: () {
               Navigator.of(context).pop();
             },

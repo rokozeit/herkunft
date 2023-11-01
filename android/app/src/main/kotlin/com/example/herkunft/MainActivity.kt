@@ -1,4 +1,4 @@
-package com.nichtgeschwindigkeit.dev.herkunft
+package com.example.herkunft
 
 import io.flutter.embedding.android.FlutterActivity
 

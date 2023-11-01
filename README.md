@@ -7,3 +7,10 @@ In order to identify the producer of products of animal origin, the EU has intro
 This app that let's you quickly identify manufacturer by selecting the country and the approval number. Currently, the countries - Germany (DE), Austria (AT), Switzerland (CH), Italy (IT) and France (FR) are available in the app.
 
 *__Just because a product comes from the same manufacturer does not mean it is the same product.__*
+
+Currently there is no agreement with the authorities about the use of the data. So I cannot just publish the app.
+
+What is working at the moment is:
+
+- Android build: `flutter build apk`
+- Windows build: `flutter build windows`

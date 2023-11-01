@@ -1,33 +1,32 @@
 import 'package:flutter/services.dart';
-import 'CompanyDetails.dart';
+import 'company_details.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
-import 'dart:typed_data';
 import 'dart:io';
 
 /// Helper querying the DB with the CompanyDetails
 class DBHelper {
   /// The internal DB version managmenet
   /// should go up every time the DB is updated externally
-  static const DB_VERSION = 1;
+  static const dbVersion = 1;
 
   /// The singleton instance
   static final DBHelper _instance = DBHelper();
 
   /// the db to be managed
-  static Database _db;
+  late Database _db;
 
   /// getter for the singleton
   static DBHelper get instance => _instance;
 
   Future<Database> get db async {
-    if (_db == null) _db = await _openDB('assets/db.sqlite');
+    _db = await _openDB('assets/db.sqlite');
     return _db;
   }
 
   /// Every time the db is updated it is copied to the app folder.
   /// This is true for the first install as well.
-  /// Version is controlled via the constant [DB_VERSION].
+  /// Version is controlled via the constant [dbVersion].
   Future<Database> _openDB(String assetDB) async {
     var databasesPath = await getDatabasesPath();
     var path = join(databasesPath, "foodorigin.db");
@@ -37,7 +36,7 @@ class DBHelper {
 
     // Checke if new DB version is larger than existing one
     // if no db exists, the version will be 0
-    if (await db.getVersion() < DB_VERSION) {
+    if (await db.getVersion() < dbVersion) {
       // first close the db so it can be exchanged
       db.close();
 
@@ -58,7 +57,7 @@ class DBHelper {
       db = await openDatabase(path);
 
       //set the new version to the copied db
-      db.setVersion(DB_VERSION);
+      db.setVersion(dbVersion);
     } else {
       // just open the db
       db = await openDatabase(path);
@@ -73,18 +72,18 @@ class DBHelper {
       String country, String searchStr) async {
     var list = await _queryDB(country, searchStr);
 
-    if (list.isEmpty || list.length == 0) {
-      return new List.empty();
+    if (list.isEmpty || list.isEmpty) {
+      return List.empty();
     }
 
     List<CompanyDetails> approvalNos = List.generate(
         list.length,
-        (index) => new CompanyDetails(
-              list[index]['name'], // ?? '',
-              list[index]['address'], // ?? '',
-              list[index]['approvalNo'], // ?? '',
-              list[index]['approvalNoOld'], // ?? '',
-              list[index]['comment'], // ?? ''
+        (index) => CompanyDetails(
+              list[index]['name'] ?? '', // ?? '',
+              list[index]['address'] ?? '', // ?? '',
+              list[index]['approvalNo'] ?? '', // ?? '',
+              list[index]['approvalNoOld'] ?? '', // ?? '',
+              list[index]['comment'] ?? '', // ?? ''
             ));
 
     // approvalNos.forEach((element) {
@@ -99,13 +98,13 @@ class DBHelper {
       String country, String searchStr) async {
     try {
       String table = country.toLowerCase();
-      Database database = await this.db;
+      Database database = await db;
       List<Map> map = await database.rawQuery(
           'SELECT * FROM "$table" WHERE approvalNo LIKE "%$searchStr%" OR approvalNoOld LIKE "%$searchStr%" ORDER BY approvalNo, approvalNoOld, name;');
       return map;
     } catch (e) {
       // what should happen here?
-      return new List.empty();
+      return List.empty();
     }
   }
 }
