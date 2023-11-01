@@ -54,7 +54,7 @@ class CompanyDetailsWidget extends StatelessWidget {
                 ),
                 leading: Icon(
                   Icons.house,
-                  color: Colors.blue[500],
+                  color: Colors.grey.shade800,
                   size: 40,
                 ),
                 subtitle: Text(companyDetails.address),
@@ -80,12 +80,15 @@ class CompanyDetailsWidget extends StatelessWidget {
                                       bottom: 10, top: 10),
                                   child: const Text('Zul.-Nr.:',
                                       style: TextStyle(
-                                          fontWeight: FontWeight.bold)))),
+                                          fontWeight: FontWeight.bold,
+                                          fontStyle: FontStyle.italic)))),
                           TableCell(
                               child: Container(
                                   padding: const EdgeInsets.only(
                                       bottom: 10, top: 10),
-                                  child: Text(companyDetails.approvalNo)))
+                                  child: Text(companyDetails.approvalNo,
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.w600))))
                         ]),
                         if (companyDetails.approvalNoOld != '')
                           TableRow(children: [
@@ -95,12 +98,15 @@ class CompanyDetailsWidget extends StatelessWidget {
                                         bottom: 10, top: 10),
                                     child: const Text('Zul.-Nr. Alt:',
                                         style: TextStyle(
-                                            fontWeight: FontWeight.bold)))),
+                                            fontWeight: FontWeight.bold,
+                                            fontStyle: FontStyle.italic)))),
                             TableCell(
                                 child: Container(
                                     padding: const EdgeInsets.only(
                                         bottom: 10, top: 10),
-                                    child: Text(companyDetails.approvalNoOld)))
+                                    child: Text(companyDetails.approvalNoOld,
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.w600))))
                           ]),
                         if (companyDetails.comment != '')
                           TableRow(children: [
@@ -122,7 +128,7 @@ class CompanyDetailsWidget extends StatelessWidget {
                 children: <Widget>[
                   TextButton(
                     child: const Text('Karte öffnen',
-                        style: TextStyle(color: Colors.blue)),
+                        style: TextStyle(color: Colors.grey)),
                     onPressed: () {
                       try {
                         MapsLauncher.launchQuery(companyDetails.address);
@@ -136,7 +142,7 @@ class CompanyDetailsWidget extends StatelessWidget {
                   ),
                   TextButton(
                     child: const Text('Websuche',
-                        style: TextStyle(color: Colors.blue)),
+                        style: TextStyle(color: Colors.grey)),
                     onPressed: () {
                       Uri uri = Uri.https('www.google.com', '/search', {
                         'q': "${companyDetails.name}+${companyDetails.address}"

@@ -1,69 +1,65 @@
 import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
 import 'company_details.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart';
-import 'dart:io';
+import 'package:sqflite_common/sqlite_api.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+// import 'package:path/path.dart' as p;
+import 'dart:io' as io;
+
+// import 'package:path_provider/path_provider.dart';
 
 /// Helper querying the DB with the CompanyDetails
 class DBHelper {
-  /// The internal DB version managmenet
-  /// should go up every time the DB is updated externally
-  static const dbVersion = 1;
-
   /// The singleton instance
   static final DBHelper _instance = DBHelper();
 
   /// the db to be managed
-  late Database _db;
+  Database? _db;
 
   /// getter for the singleton
   static DBHelper get instance => _instance;
 
   Future<Database> get db async {
-    _db = await _openDB('assets/db.sqlite');
-    return _db;
+    if (_db != null) {
+      return _db!;
+    }
+
+    await _openDB();
+    return _db!;
   }
 
-  /// Every time the db is updated it is copied to the app folder.
-  /// This is true for the first install as well.
-  /// Version is controlled via the constant [dbVersion].
-  Future<Database> _openDB(String assetDB) async {
-    var databasesPath = await getDatabasesPath();
-    var path = join(databasesPath, "foodorigin.db");
+  /// https://blog.devgenius.io/adding-sqlite-db-file-from-the-assets-internet-in-flutter-3ec42c14cd44
+  _openDB() async {
+    if (io.Platform.isWindows || io.Platform.isLinux) {
+      sqfliteFfiInit();
+    }
 
-    // open existing db if it exists
-    var db = await openDatabase(path);
+    databaseFactory = databaseFactoryFfi;
 
-    // Checke if new DB version is larger than existing one
-    // if no db exists, the version will be 0
-    if (await db.getVersion() < dbVersion) {
-      // first close the db so it can be exchanged
-      db.close();
+    final io.Directory appDocumentsDir =
+        await getApplicationDocumentsDirectory();
 
-      // This should only happen the first time the application is used
-      try {
-        await Directory(dirname(path)).create(recursive: true);
-      } catch (_) {}
+    String path = [appDocumentsDir.path, "foodorigin.db"].join('/');
 
+    bool dbExists = await io.File(path).exists();
+
+    if (!dbExists) {
       // Copy from asset
+      var assetDB = ["assets", "db.sqlite"].join('/');
+
       ByteData data = await rootBundle.load(assetDB);
       List<int> bytes =
           data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
 
-      // Write and flush the data
-      await File(path).writeAsBytes(bytes, flush: true);
-
-      //open the newly created db
-      db = await openDatabase(path);
-
-      //set the new version to the copied db
-      db.setVersion(dbVersion);
-    } else {
-      // just open the db
-      db = await openDatabase(path);
+      // Write and flush the bytes written
+      await io.File(path).writeAsBytes(bytes, flush: true);
     }
-    // return db
-    return db;
+
+    if (io.Platform.isWindows || io.Platform.isLinux) {
+      _db = await databaseFactory.openDatabase(path);
+    } else {
+      _db = await databaseFactory.openDatabase(path);
+    }
   }
 
   /// Returning a list of CompanyDetails matching the [searchStr]
@@ -99,8 +95,14 @@ class DBHelper {
     try {
       String table = country.toLowerCase();
       Database database = await db;
+
+      // List<Map> map = await database.query(table,
+      //     where:
+      //         'approvalNo LIKE "%$searchStr%" OR approvalNoOld LIKE "%$searchStr%"',
+      //     orderBy: 'approvalNo, approvalNoOld, name');
+
       List<Map> map = await database.rawQuery(
-          'SELECT * FROM "$table" WHERE approvalNo LIKE "%$searchStr%" OR approvalNoOld LIKE "%$searchStr%" ORDER BY approvalNo, approvalNoOld, name;');
+          "SELECT DISTINCT * FROM '$table' WHERE approvalNo LIKE '%$searchStr%' OR approvalNoOld LIKE '%$searchStr%' ORDER BY approvalNo, approvalNoOld, name;");
       return map;
     } catch (e) {
       // what should happen here?

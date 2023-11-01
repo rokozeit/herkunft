@@ -47,43 +47,6 @@ class _SearchPageState extends State<SearchPage> {
     });
   }
 
-  Widget _getDrawer(BuildContext context) {
-    return Drawer(
-      // Add a ListView to the drawer. This ensures the user can scroll
-      // through the options in the drawer if there isn't enough vertical
-      // space to fit everything.
-      child: ListView(
-        // Important: Remove any padding from the ListView.
-        padding: EdgeInsets.zero,
-        children: <Widget>[
-          const DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.blue,
-              ),
-              child: Text('Drawer Header')),
-          ListTile(
-            title: const Text('Item 1'),
-            onTap: () {
-              // Update the state of the app
-              // ...
-              // Then close the drawer
-              Navigator.pop(context);
-            },
-          ),
-          ListTile(
-            title: const Text('Item 2'),
-            onTap: () {
-              // Update the state of the app
-              // ...
-              // Then close the drawer
-              Navigator.pop(context);
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _getBottomAppBar(BuildContext context) {
     // final List<String> list = List.generate(10, (index) => "Text $index");
 
@@ -120,7 +83,7 @@ class _SearchPageState extends State<SearchPage> {
   Widget _buildDropdown() {
     return DropdownButton<String>(
       value: _selectedCountry,
-      icon: const Icon(Icons.arrow_downward),
+      icon: const Icon(Icons.expand_more),
       iconSize: 24,
       elevation: 16,
       underline: Container(
@@ -155,7 +118,6 @@ class _SearchPageState extends State<SearchPage> {
             padding: const EdgeInsets.fromLTRB(100, 20, 100, 0),
             child: Image.asset(
               'assets/image.png',
-              // width: 300,
             )),
       ]);
     } else {
