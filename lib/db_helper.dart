@@ -1,12 +1,7 @@
-import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'company_details.dart';
-import 'package:sqflite_common/sqlite_api.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-// import 'package:path/path.dart' as p;
 import 'dart:io' as io;
-
-// import 'package:path_provider/path_provider.dart';
 
 /// Helper querying the DB with the CompanyDetails
 class DBHelper {
@@ -41,25 +36,7 @@ class DBHelper {
 
     String path = [appDocumentsDir.path, "foodorigin.db"].join('/');
 
-    bool dbExists = await io.File(path).exists();
-
-    if (!dbExists) {
-      // Copy from asset
-      var assetDB = ["assets", "db.sqlite"].join('/');
-
-      ByteData data = await rootBundle.load(assetDB);
-      List<int> bytes =
-          data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
-
-      // Write and flush the bytes written
-      await io.File(path).writeAsBytes(bytes, flush: true);
-    }
-
-    if (io.Platform.isWindows || io.Platform.isLinux) {
-      _db = await databaseFactory.openDatabase(path);
-    } else {
-      _db = await databaseFactory.openDatabase(path);
-    }
+    _db = await databaseFactory.openDatabase(path);
   }
 
   /// Returning a list of CompanyDetails matching the [searchStr]
@@ -82,10 +59,6 @@ class DBHelper {
               list[index]['comment'] ?? '', // ?? ''
             ));
 
-    // approvalNos.forEach((element) {
-    //   print(element);
-    // });
-
     return approvalNos;
   }
 
@@ -95,12 +68,6 @@ class DBHelper {
     try {
       String table = country.toLowerCase();
       Database database = await db;
-
-      // List<Map> map = await database.query(table,
-      //     where:
-      //         'approvalNo LIKE "%$searchStr%" OR approvalNoOld LIKE "%$searchStr%"',
-      //     orderBy: 'approvalNo, approvalNoOld, name');
-
       List<Map> map = await database.rawQuery(
           "SELECT DISTINCT * FROM '$table' WHERE approvalNo LIKE '%$searchStr%' OR approvalNoOld LIKE '%$searchStr%' ORDER BY approvalNo, approvalNoOld, name;");
       return map;

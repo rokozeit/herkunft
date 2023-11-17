@@ -159,9 +159,6 @@ class CompanyDetailsWidget extends StatelessWidget {
   void _openURL(String url) async {
     // if (await canLaunch(url)) {
     await launchUrl(Uri.parse(url));
-    // } else {
-    //   throw 'Could not launch $url';
-    // }
   }
 }
 

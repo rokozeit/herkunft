@@ -8,9 +8,8 @@ void main() async {
     WidgetsFlutterBinding.ensureInitialized();
     await windowManager.ensureInitialized();
     WindowManager.instance.setMinimumSize(const Size(400, 600));
-    WindowManager.instance.setTitle("Lebensmittelherkunft");
+    WindowManager.instance.setTitle("food origin");
     WindowManager.instance.setSize(const Size(400, 600));
-    // WindowManager.instance.setMaximumSize(const Size(800, 1200));
   }
 
   runApp(const MyApp());
@@ -23,7 +22,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Lebensmittelherkunft',
+      title: 'food origin',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.yellow),
         useMaterial3: true,
