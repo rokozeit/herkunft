@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:herkunft/company_details.dart';
 import 'package:herkunft/db_helper.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -20,7 +21,7 @@ class _SearchPageState extends State<SearchPage> {
 
   String _searchText = "";
 
-  String _selectedCountry = "DE";
+  // String _selectedCountry = "de";
 
   @override
   Widget build(BuildContext context) {
@@ -105,28 +106,51 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Widget _buildDropdown() {
-    return DropdownButton<String>(
-      value: _selectedCountry,
-      icon: const Icon(Icons.expand_more),
-      iconSize: 24,
-      elevation: 16,
-      underline: Container(
-        height: 2,
-      ),
-      onChanged: (newValue) {
-        setState(() {
-          if (newValue != null) _selectedCountry = newValue;
+    return FutureBuilder(
+        future: DBHelper.instance.getTableNames(),
+        builder: (context, snapshotDB) {
+          if (snapshotDB.hasData) {
+            return FutureBuilder(
+                future: getCountry(),
+                builder: (context, snapshotCountry) {
+                  if (snapshotCountry.hasData) {
+                    return DropdownButton<String>(
+                      value: snapshotCountry.data,
+                      icon: const Icon(Icons.expand_more),
+                      iconSize: 24,
+                      elevation: 16,
+                      underline: Container(
+                        height: 2,
+                      ),
+                      onChanged: (newValue) {
+                        setState(() {
+                          if (newValue != null) setCountry(newValue);
+                        });
+                      },
+                      // items: <String>['DE', 'AT', 'IT', 'FR']
+                      // items: <String>['DE', 'AT', 'CH', 'FR', 'IT']
+                      items: snapshotDB.data
+                          ?.map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                    );
+                  } else {
+                    return DropdownButton<String>(
+                      items: [],
+                      onChanged: (String? value) {},
+                    );
+                  }
+                });
+          } else {
+            return DropdownButton<String>(
+              items: [],
+              onChanged: (value) {},
+            );
+          }
         });
-      },
-      // items: <String>['DE', 'AT', 'IT', 'FR']
-      items: <String>['DE', 'AT', 'CH', 'FR', 'IT']
-          .map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      }).toList(),
-    );
   }
 
   Widget _buildResult() {
@@ -170,21 +194,29 @@ class _SearchPageState extends State<SearchPage> {
                     )),
               ]);
             } else {
-              return Scaffold(
-                  body: FutureBuilder<List>(
-                future: DBHelper.instance
-                    .getCompanyDetailList(_selectedCountry, _searchText),
-                initialData: List.empty(),
-                builder: (context, snapshot) {
-                  return ListView.builder(
-                    padding: const EdgeInsets.all(10.0),
-                    itemCount: snapshot.data?.length,
-                    itemBuilder: (context, i) {
-                      return CompanyDetailsWidget(snapshot.data?[i]);
-                    },
-                  );
-                },
-              ));
+              return FutureBuilder(
+                  future: getCountry(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Scaffold(
+                          body: FutureBuilder<List>(
+                        future: DBHelper.instance.getCompanyDetailList(
+                            snapshot.data ?? "de", _searchText),
+                        initialData: List.empty(),
+                        builder: (context, snapshot) {
+                          return ListView.builder(
+                            padding: const EdgeInsets.all(10.0),
+                            itemCount: snapshot.data?.length,
+                            itemBuilder: (context, i) {
+                              return CompanyDetailsWidget(snapshot.data?[i]);
+                            },
+                          );
+                        },
+                      ));
+                    } else {
+                      return const Scaffold();
+                    }
+                  });
             }
           }
         });
@@ -210,5 +242,16 @@ class _SearchPageState extends State<SearchPage> {
     } else {
       // User canceled the picker - nothing to do
     }
+  }
+
+  setCountry(String country) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString("country", country);
+  }
+
+  Future<String> getCountry() async {
+    final prefs = await SharedPreferences.getInstance();
+    String country = prefs.getString("country") ?? "de";
+    return country;
   }
 }

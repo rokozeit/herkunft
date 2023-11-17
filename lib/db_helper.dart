@@ -76,4 +76,28 @@ class DBHelper {
       return List.empty();
     }
   }
+
+  Future<List<String>> getTableNames() async {
+    try {
+      Database database = await db;
+      List<Map> list = await database
+          .rawQuery("SELECT name FROM sqlite_master WHERE type='table'");
+
+      if (list.isEmpty || list.isEmpty) {
+        return List.empty();
+      }
+
+      List<String> countries = List.generate(
+        list.length,
+        (index) => list[index]['name'] ?? '', // ?? '',
+      );
+
+      countries.sort((a, b) => a.compareTo(b));
+
+      return countries;
+    } catch (e) {
+      // what should happen here?
+      return List.empty();
+    }
+  }
 }
