@@ -5,9 +5,13 @@ Who is the manufacturer of the milk, cheese or sausage, for example? Was the che
 In order to identify the producer of products of animal origin, the EU has introduced the so-called EC identification and health marks (Genusstauglichkeits- und Identitätskennzeichen in Germany). It is an oval symbol that includes, among other things, the country of origin and the approval number of the manufacturing company.
 
 <img src="Screenshot.png" alt="health mark example" width="auto" height="300" style="margin-right:2em">
+
+*Screenshots of the Android App*
+
 <img src="Screenshot_windows.png" alt="health mark example" width="auto" height="300">
-<figcaption>Screenshots of the Android and Windows Apps</figcaption>
-<br>
+
+*Screenshots of the Windows Apps*
+
 
 This app that let's you quickly identify manufacturer by selecting the country and the approval number. Currently, the countries - Germany (DE), Austria (AT), Switzerland (CH), Italy (IT) and France (FR) are available in the app.
 
