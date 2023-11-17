@@ -68,8 +68,9 @@ class DBHelper {
     try {
       String table = country.toLowerCase();
       Database database = await db;
+      String searchStr2 = searchStr.replaceAll(" ", "%");
       List<Map> map = await database.rawQuery(
-          "SELECT DISTINCT * FROM '$table' WHERE approvalNo LIKE '%$searchStr%' OR approvalNoOld LIKE '%$searchStr%' ORDER BY approvalNo, approvalNoOld, name;");
+          "SELECT DISTINCT * FROM '$table' WHERE approvalNo LIKE '%$searchStr%' OR approvalNoOld LIKE '%$searchStr%'  OR name LIKE '%$searchStr2%'  OR address LIKE '%$searchStr2%' ORDER BY approvalNo, approvalNoOld, name;");
       return map;
     } catch (e) {
       // what should happen here?
