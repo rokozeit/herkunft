@@ -17,6 +17,8 @@ This app that let's you quickly identify manufacturer by selecting the country a
 
 <img src="assets/image.png" alt="health mark example" width="200" height="auto">
 
+*Sample health mark*
+
 You can search for the address in your prefered map application and even start a web search for the company.
 
 Since the data are extracted from the individual sides and I do not have an agreement with the authorities maintaining these data, the data is not included in this app. Some sample scripts to extract these data can be found at [this project](https://github.com/rokozeit/herkunft_daten).
@@ -53,4 +55,7 @@ The format for the [sqlite](https://www.sqlite.org/index.html) data base is:
 Some sample Python code on how to extract them is provided in [another project](https://github.com/rokozeit/herkunft_daten).
 
 ## Install the data
-Once you have the sqlite data base built you can upload it to the Android device or you Windows computer. At the first start of the app you will be asked to import the data base with the default file browser. Once imported you can delete the original file. If you want to change the data base, you can do so via the menu at the top left. 
+Once you have the sqlite data base built you can upload it to the Android device or you Windows computer. At the first start of the app you will be asked to import the data base with the default file browser. Once imported you can delete the original file. If you want to change the data base, you can do so via the menu at the top left.
+
+# Updates
+2023-11-18: For Android added scanning the health mark with the phone camera - used library [flutter_scalable_ocr](https://pub.dev/packages/flutter_scalable_ocr)

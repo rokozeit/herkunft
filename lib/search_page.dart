@@ -6,6 +6,7 @@ import 'package:herkunft/company_details.dart';
 import 'package:herkunft/db_helper.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_scalable_ocr/flutter_scalable_ocr.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -20,8 +21,7 @@ class _SearchPageState extends State<SearchPage> {
   final TextEditingController _filter = TextEditingController();
 
   String _searchText = "";
-
-  // String _selectedCountry = "de";
+  String _scannedText = "";
 
   @override
   Widget build(BuildContext context) {
@@ -83,6 +83,7 @@ class _SearchPageState extends State<SearchPage> {
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  _buildOCRButton(),
                   _buildSearchFiled(),
                   _buildDropdown(),
                 ])));
@@ -91,8 +92,10 @@ class _SearchPageState extends State<SearchPage> {
   Widget _buildSearchFiled() {
     return Expanded(
         child: TextField(
+            maxLines: 1,
             controller: _filter,
             decoration: InputDecoration(
+                isCollapsed: true,
                 prefixIcon: const Icon(Icons.search),
                 hintText: 'Search...',
                 suffixIcon: IconButton(
@@ -103,6 +106,74 @@ class _SearchPageState extends State<SearchPage> {
                         _filter.clear();
                       });
                     }))));
+  }
+
+  Widget _buildOCRButton() {
+    if (Platform.isAndroid || Platform.isIOS) {
+      return FloatingActionButton(
+          onPressed: () {
+            _dialogBuilder(context);
+          },
+          child: const Icon(
+            Icons.camera_alt,
+          ));
+    } else {
+      return Container();
+    }
+  }
+
+  Future<void> _dialogBuilder(BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Scan the health mark'),
+          content: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                ScalableOCR(
+                    paintboxCustom: Paint()
+                      ..style = PaintingStyle.stroke
+                      ..strokeWidth = 4.0
+                      ..color = Color.fromARGB(153, 114, 241, 102),
+                    boxLeftOff: 5,
+                    boxBottomOff: 2.5,
+                    boxRightOff: 5,
+                    boxTopOff: 2.5,
+                    boxHeight: MediaQuery.of(context).size.height / 3,
+                    // getRawData: (value) {
+                    //   inspect(value);
+                    // },
+                    getScannedText: (value) {
+                      _scannedText = value.toString().trim();
+                    }),
+              ]),
+          actions: <Widget>[
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.labelLarge,
+              ),
+              child: const Text('OK'),
+              onPressed: () {
+                // _searchText = _scannedText;
+                _filter.value = TextEditingValue(text: _scannedText);
+                setState(() {});
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.labelLarge,
+              ),
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Widget _buildDropdown() {
@@ -127,8 +198,6 @@ class _SearchPageState extends State<SearchPage> {
                           if (newValue != null) setCountry(newValue);
                         });
                       },
-                      // items: <String>['DE', 'AT', 'IT', 'FR']
-                      // items: <String>['DE', 'AT', 'CH', 'FR', 'IT']
                       items: snapshotDB.data
                           ?.map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
@@ -139,14 +208,14 @@ class _SearchPageState extends State<SearchPage> {
                     );
                   } else {
                     return DropdownButton<String>(
-                      items: [],
+                      items: const [],
                       onChanged: (String? value) {},
                     );
                   }
                 });
           } else {
             return DropdownButton<String>(
-              items: [],
+              items: const [],
               onChanged: (value) {},
             );
           }
@@ -253,5 +322,11 @@ class _SearchPageState extends State<SearchPage> {
     final prefs = await SharedPreferences.getInstance();
     String country = prefs.getString("country") ?? "de";
     return country;
+  }
+
+  @override
+  void dispose() {
+    _filter.dispose();
+    super.dispose();
   }
 }
