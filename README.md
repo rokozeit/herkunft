@@ -5,8 +5,8 @@ Who is the manufacturer of the milk, cheese or sausage, for example? Was the che
 In order to identify the producer of products of animal origin, the EU has introduced the so-called EC identification and health marks (Genusstauglichkeits- und Identitätskennzeichen in Germany). It is an oval symbol that includes, among other things, the country of origin and the approval number of the manufacturing company.
 
 <p float="left">
-<img src="assets/Screenshot_Android_search.jpg" alt="health mark example" width="auto" height="350" style="margin-right:2em">
-<img src="assets/Screenshot_windows.png" alt="health mark example" width="auto" height="350">
+<img src="assets/Screenshot_Android_search.jpg" alt="health mark example" width="auto" height="350" style="border: 2px solid #AAA; margin-right:10px">
+<img src="assets/Screenshot_windows.png" alt="health mark example" width="auto" height="350" style="border: 2px solid #AAA;">
 <p>
 
 *Screenshots of the Android App (left) and Windows Apps (rigth)*
@@ -75,7 +75,7 @@ Type in the code. Do not type in the country code and no `EC`, `CE` here.
 
 *Sample health marks*
 
-<img src="assets/Screenshot_Android_search.jpg" alt="health mark example" width="300" height="auto">
+<img src="assets/Screenshot_Android_search.jpg" alt="health mark example" width="300" height="auto" style="border: 2px solid #AAA;">
 
 *Screenhot of the search on Android*
 
@@ -86,14 +86,14 @@ Click on the camera button for scanning the code. A dialog is opened. You might 
 
 Point the camera towards the code so it appears in the the blue rectangle. Not the country code and no `EC`, `CE`). See images above. Wait till the code is recognised and then press `OK`.
 
-<img src="assets/Screenshot_Android_scan.jpg" alt="health mark example" width="300" height="auto">
+<img src="assets/Screenshot_Android_scan.jpg" alt="health mark example" width="300" height="auto" style="border: 2px solid #AAA;">
 
 *Screenhot of the scanning on Android*
 
 ### Searching by name or address
 If you want to find a specific company or all companies in a city or specific address, you can enter the name or address as search string or scan the name or address via the camera button (`The later currently only available on Android`).
 
-<img src="assets/Screenshot_Android_search_city.jpg" alt="health mark example" width="300" height="auto">
+<img src="assets/Screenshot_Android_search_city.jpg" alt="health mark example" width="300" height="auto" style="border: 2px solid #AAA;">
 
 *Screenhot of search for city on Android*
 
