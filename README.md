@@ -24,7 +24,7 @@ This app that let's you quickly identify manufacturer by selecting the country a
 
 You can search for the address in your prefered map application and even start a web search for the company.
 
-**`REMARK:`** `Since the data for the health mark data base is extracted from the individual web pages and I do not have an agreement with the authorities maintaining these data, the data is not included in this app. Some sample scripts to extract these data can be found at [this project](https://github.com/rokozeit/herkunft_daten).`
+**`REMARK:`** `Since the data for the health mark data base is extracted from the individual web pages and I do not have an agreement with the authorities maintaining these data, the data is not included in this app. Some sample scripts to extract these data can be found at` [this project](https://github.com/rokozeit/herkunft_daten).
 
 **What is working at the moment:** Currently Windows and Android builds are working. I do not own an Mac so currently I cannot do the Apple part.
 
