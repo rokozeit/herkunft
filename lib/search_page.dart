@@ -141,11 +141,12 @@ class _SearchPageState extends State<SearchPage> {
                     boxRightOff: 5,
                     boxTopOff: 2.5,
                     boxHeight: MediaQuery.of(context).size.height / 3,
-                    // getRawData: (value) {
-                    //   inspect(value);
-                    // },
+                    getRawData: (value) {
+                      value;
+                      // inspect(value);
+                    },
                     getScannedText: (value) {
-                      _scannedText = value.toString().trim();
+                      _scannedText = _cleanup(value);
                     }),
               ]),
           actions: <Widget>[
@@ -174,6 +175,22 @@ class _SearchPageState extends State<SearchPage> {
         );
       },
     );
+  }
+
+  String _cleanup(String scannTxt) {
+    return scannTxt
+        .toLowerCase()
+        .replaceAll('de', '')
+        .replaceAll('fr', '')
+        .replaceAll('at', '')
+        .replaceAll('ch', '')
+        .replaceAll('it', '')
+        .replaceAll('ue', '')
+        .replaceAll('ce', '')
+        .replaceAll('eg', '')
+        .replaceAll('c.e', '')
+        .trim()
+        .toUpperCase();
   }
 
   Widget _buildDropdown() {
