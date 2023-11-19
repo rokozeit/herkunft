@@ -57,8 +57,14 @@ The format for the [sqlite](https://www.sqlite.org/index.html) data base is:
 
 Some sample Python code on how to extract them is provided in [another project](https://github.com/rokozeit/herkunft_daten).
 
-## Install the data
-Once you have the sqlite data base built you can upload it to the Android device or you Windows computer. At the first start of the app you will be asked to import the data base with the default file browser. Once imported you can delete the original file. If you want to change the data base, you can do so via the menu at the top left.
+# Using the app
+## Installing the data base
+Once you have the sqlite data base built, you can upload it to the Android device or your Windows computer.
+
+At the first start of the app you will be asked to import the data base. By clicking on the text (link), the file browser will let you choose the data base. Once imported you can delete the original file.
+
+### Updating the data base
+If you want to import a new version of the data base, you can do so via the menu at the top left. Choose `Import data` and select the new data base within the file browser.
 
 ## Usage
 ### Country selection
