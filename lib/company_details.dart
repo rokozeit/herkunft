@@ -78,7 +78,7 @@ class CompanyDetailsWidget extends StatelessWidget {
                               child: Container(
                                   padding: const EdgeInsets.only(
                                       bottom: 10, top: 10),
-                                  child: const Text('Zul.-Nr.:',
+                                  child: const Text('Health mark:',
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontStyle: FontStyle.italic)))),
@@ -96,7 +96,7 @@ class CompanyDetailsWidget extends StatelessWidget {
                                 child: Container(
                                     padding: const EdgeInsets.only(
                                         bottom: 10, top: 10),
-                                    child: const Text('Zul.-Nr. Alt:',
+                                    child: const Text('Health mark (old):',
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontStyle: FontStyle.italic)))),
@@ -114,7 +114,7 @@ class CompanyDetailsWidget extends StatelessWidget {
                                 child: Container(
                                     padding: const EdgeInsets.only(
                                         bottom: 10, top: 10),
-                                    child: const Text('Bemerkung:',
+                                    child: const Text('Comment:',
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold)))),
                             TableCell(
@@ -127,22 +127,24 @@ class CompanyDetailsWidget extends StatelessWidget {
               ButtonBar(
                 children: <Widget>[
                   TextButton(
-                    child: const Text('Karte öffnen',
-                        style: TextStyle(color: Colors.grey)),
+                    child: const Text(
+                      'Open on map',
+                    ),
                     onPressed: () {
                       try {
                         MapsLauncher.launchQuery(companyDetails.address);
                       } catch (e) {
                         _showDialog(
-                            "Hinweis",
-                            "'Ein Klick auf die Information sollte die Karten App (z.B. Google Maps) öffnen. Es sieht so aus, alsob keine Kartenapp installiert ist oder als solche verfügbar ist.'",
+                            "Remark",
+                            "Should open the the map-App if configured correctly. Looks like there was an issue.",
                             context);
                       }
                     },
                   ),
                   TextButton(
-                    child: const Text('Websuche',
-                        style: TextStyle(color: Colors.grey)),
+                    child: const Text(
+                      'Web search',
+                    ),
                     onPressed: () {
                       Uri uri = Uri.https('www.google.com', '/search', {
                         'q': "${companyDetails.name}+${companyDetails.address}"
@@ -168,7 +170,7 @@ void _showDialog(String title, String message, BuildContext context) {
     barrierDismissible: false, // user must tap button!
     builder: (BuildContext context) {
       return AlertDialog(
-        title: const Text('Hinweis'),
+        title: Text(title),
         content: SingleChildScrollView(
           child: ListBody(
             children: <Widget>[
