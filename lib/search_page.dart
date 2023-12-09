@@ -9,7 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_scalable_ocr/flutter_scalable_ocr.dart';
 
 class SearchPage extends StatefulWidget {
-  const SearchPage({super.key});
+  const SearchPage({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -20,22 +20,24 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   final TextEditingController _filter = TextEditingController();
 
-  String _searchText = "";
-  String _scannedText = "";
+  String _searchText = '';
+  String _scannedText = '';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        drawer: _getDrawer(context),
-        appBar: AppBar(
-          title: const Text('Food origin'),
-          centerTitle: true,
+      drawer: _getDrawer(context),
+      appBar: AppBar(
+        title: const Text('Food Origin'),
+        centerTitle: true,
+      ),
+      body: Scaffold(
+        bottomNavigationBar: _getBottomAppBar(context),
+        body: Container(
+          child: _buildResult(),
         ),
-        body: Scaffold(
-            bottomNavigationBar: _getBottomAppBar(context),
-            body: Container(
-              child: _buildResult(),
-            )));
+      ),
+    );
   }
 
   _SearchPageState() {
@@ -135,7 +137,7 @@ class _SearchPageState extends State<SearchPage> {
                     paintboxCustom: Paint()
                       ..style = PaintingStyle.stroke
                       ..strokeWidth = 4.0
-                      ..color = Color.fromARGB(153, 114, 241, 102),
+                      ..color = const Color.fromARGB(153, 114, 241, 102),
                     boxLeftOff: 5,
                     boxBottomOff: 2.5,
                     boxRightOff: 5,
@@ -244,26 +246,31 @@ class _SearchPageState extends State<SearchPage> {
         future: existsDB(),
         builder: (context, snapshot) {
           if (snapshot.hasData && snapshot.data == false) {
-            return ListView(padding: const EdgeInsets.all(10.0), children: [
-              InkWell(
+            return ListView(
+              padding: const EdgeInsets.all(10.0),
+              children: [
+                InkWell(
                   child: const Center(
-                      child: Text(
-                    "No data base could be found. Import the health mark data base first by clicking here.",
-                    textScaleFactor: 2,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
+                    child: Text(
+                      "No database found. Click here to import the health mark database.",
+                      textScaleFactor: 2,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
                         decoration: TextDecoration.underline,
-                        color: Colors.blue),
-                  )),
-                  onTap: () => {
-                        importDB(),
-                      }),
-              Container(
+                        color: Colors.blue,
+                      ),
+                    ),
+                  ),
+                  onTap: () {
+                    importDB();
+                  },
+                ),
+                Container(
                   padding: const EdgeInsets.fromLTRB(100, 20, 100, 0),
-                  child: Image.asset(
-                    'assets/image.png',
-                  )),
-            ]);
+                  child: Image.asset('assets/image.png'),
+                ),
+              ],
+            );
           } else {
             if (_searchText == '') {
               return ListView(padding: const EdgeInsets.all(10.0), children: [

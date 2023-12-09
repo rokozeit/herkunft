@@ -7,24 +7,31 @@ void main() async {
   if (io.Platform.isWindows || io.Platform.isLinux) {
     WidgetsFlutterBinding.ensureInitialized();
     await windowManager.ensureInitialized();
-    WindowManager.instance.setMinimumSize(const Size(400, 600));
-    WindowManager.instance.setTitle("food origin");
-    WindowManager.instance.setSize(const Size(400, 600));
+    _configureWindowManager();
   }
 
   runApp(const MyApp());
 }
 
+void _configureWindowManager() {
+  WindowManager.instance.setMinimumSize(const Size(400, 600));
+  WindowManager.instance.setTitle("Food Origin");
+  WindowManager.instance.setSize(const Size(400, 600));
+}
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'food origin',
+      title: 'Food Origin',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.lime,
+          // ···
+          // brightness: Brightness.light,
+        ),
         useMaterial3: true,
       ),
       home: const SearchPage(),
