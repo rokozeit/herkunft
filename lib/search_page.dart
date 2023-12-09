@@ -70,7 +70,9 @@ class _SearchPageState extends State<SearchPage> {
               child: Text('Data import')),
           ListTile(
             title: const Text('Import data'),
-            onTap: () async {},
+            onTap: () {
+              importDB();
+            },
           ),
         ],
       ),

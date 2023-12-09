@@ -3,21 +3,27 @@ import 'company_details.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'dart:io' as io;
 
+/// Helper querying the DB with the CompanyDetails
 class DBHelper {
+  /// The singleton instance
   static final DBHelper _instance = DBHelper();
-  late Database _db;
 
+  /// the db to be managed
+  Database? _db;
+
+  /// getter for the singleton
   static DBHelper get instance => _instance;
 
   Future<Database> get db async {
-    if (_db.isOpen) {
-      return _db;
+    if (_db != null) {
+      return _db!;
     }
 
     await _openDB();
-    return _db;
+    return _db!;
   }
 
+  /// https://blog.devgenius.io/adding-sqlite-db-file-from-the-assets-internet-in-flutter-3ec42c14cd44
   Future<void> _openDB() async {
     if (io.Platform.isWindows || io.Platform.isLinux) {
       sqfliteFfiInit();
@@ -31,6 +37,8 @@ class DBHelper {
     _db = await databaseFactory.openDatabase(path);
   }
 
+  /// Returning a list of CompanyDetails matching the [searchStr]
+  /// for the selected [country]
   Future<List<CompanyDetails>> getCompanyDetailList(
       String country, String searchStr) async {
     final list = await _queryDB(country, searchStr);
